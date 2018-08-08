@@ -14,6 +14,10 @@ include_directories(${HEADER_PATH} ${PROSTO_PATH})
 #source_group("include" FILES ${HEADER_LIST})
 file(GLOB HEADER_LIST "${HEADER_PATH}/*.h*")
 
+FIND_PACKAGE( Boost)
+include_directories(${Boost_INCLUDE_DIR})
+link_directories(${Boost_LIBRARY_DIR})
+
 if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -pedantic-errors")
 

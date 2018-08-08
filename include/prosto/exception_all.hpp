@@ -16,17 +16,16 @@
 \* ************************************************************************* */
 
 /*!
- * \file   exception.h
  * \author michail peterlis
- * \brief  includer for extended exception class.
+ * \brief  Includer for extended exception class.
  * ************************************************************************* */
 
 
-#ifndef PROSTO_EXCEPTION_H
-#define PROSTO_EXCEPTION_H
+#ifndef PROSTO_EXCEPTION_ALL_HPP
+#define PROSTO_EXCEPTION_ALL_HPP
 
 
 #include "exception/exception.hpp"
 #include "exception/common_print.hpp"
 
-#endif // PROSTO_EXCEPTION_H
+#endif // PROSTO_EXCEPTION_ALL_HPP

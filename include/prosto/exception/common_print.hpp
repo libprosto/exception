@@ -25,9 +25,7 @@
 #ifndef PROSTO_EXCEPTION_COMMON_PRINT_HPP
 #define PROSTO_EXCEPTION_COMMON_PRINT_HPP
 
-#include <iostream>
-
-#include <prosto/environment/debug.hpp>
+#include <ostream>
 
 #include "exception.hpp"
 
@@ -38,45 +36,32 @@ namespace detail_ {
 
 /// \todo describe this function.
 template<typename ostream_T>
-void error_printer(std::exception const& e, ostream_T& os, unsigned int rec = 0) {
-  auto pt = [&rec, &os]() { for (unsigned i = 0; i<rec; i++) os << "\t"; };
+void error_printer(std::exception const& e, ostream_T& os, unsigned int rec) {
+  std::string pt(rec, '\t');
 
 #ifdef PROSTO_PSEUDO_DEBUG
-  pt();
-  os << "type\t\t:\t" << typeid(e).name() << "\n";
+  os << pt << "type\t\t:\t" << typeid(e).name() << "\n";
 #endif
   
-  if(auto eh = exception::info<exception::code>(e)) {
-    pt();
-    os << "code\t\t:\t0x" << std::hex << std::uppercase << *eh << std::dec << std::nouppercase << "\n";
-  }
+  if(auto eh = exception::info<prosto::exception::code>(e))
+    os << pt << "code\t\t:\t0x" << std::hex << std::uppercase << *eh << std::dec << std::nouppercase << "\n";
 
-  if(auto eh = exception::info<exception::message>(e)) {
-    pt();
-    os << "message\t\t:\t" << *eh << "\n";
-  }
-  else {
-    pt();
-    os << "what\t\t:\t" << e.what() << "\n";
-  }
+  if(auto eh = exception::info<exception::message>(e))
+    os << pt << "message\t\t:\t" << *eh << "\n";
+  else
+    os << pt << "what\t\t:\t" << e.what() << "\n";
 
-  // since programming relevant information is only added in at least pseudo
+  // since programming relevant information is only added in with (at least pseudo)
   // debugmode, there is no need print it out.
 #ifdef PROSTO_PSEUDO_DEBUG
-  if(auto eh = exception::info<exception::filename>(e)) {
-    pt();
-    os << "filename\t:\t" << *eh << "\n";
-  }
+  if(auto eh = exception::info<exception::filename>(e))
+    os << pt << "filename\t:\t" << *eh << "\n";
 
-  if(auto eh = exception::info<exception::linenumber>(e)) {
-    pt();
-    os << "linenumber\t:\t" << *eh << "\n";
-  }
+  if(auto eh = exception::info<exception::linenumber>(e))
+    os << pt << "linenumber\t:\t" << *eh << "\n";
 
-  if(auto eh = exception::info<exception::function>(e)) {
-    pt();
-    os << "fuction\t\t:\t" << *eh << "\n";
-  }
+  if(auto eh = exception::info<exception::function>(e))
+    os << pt << "fuction\t\t:\t" << *eh << "\n";
 #endif
 
   if(auto eh = exception::info<exception::handle<exception::printf_type>>(e))
@@ -84,8 +69,7 @@ void error_printer(std::exception const& e, ostream_T& os, unsigned int rec = 0)
 
   try{ std::rethrow_if_nested(e); }
   catch(std::exception const& n) {
-    pt();
-    os << "with previous error\t:\n";
+    os << pt << "with nested error\t:\n";
     error_printer(n, os, ++rec);
   }
 }
@@ -93,8 +77,8 @@ void error_printer(std::exception const& e, ostream_T& os, unsigned int rec = 0)
 } // namespace detail
 
 
-/// \todo make the template streamable for all kinds of stream and \b test it.
-/// \todo make streamable with const exception.
+/// \todo Make the template streamable for all kinds of stream and \b test it.
+/// \todo Make streamable with const exception.
 template<typename ostream_T = std::ostream>
 ostream_T& operator<<(ostream_T& os, std::exception const& e) {
   detail_::error_printer(e, os, 0);

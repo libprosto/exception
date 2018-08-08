@@ -2,12 +2,14 @@
 #define TEST_CUSTOM_EXCEPTION_HPP
 
 
+#include <iostream>
+
 #include <prosto/exception_all.hpp>
 
 
 bool throw_std_catch_std_first() {
   try {
-    throw(std::runtime_error("std::runtime_error"));
+    throw(std::runtime_error("throw std catch std first"));
   }
   catch(std::exception const& e) {
     using namespace prosto;
@@ -28,10 +30,10 @@ bool throw_std_catch_std_first() {
 
 bool throw_std_catch_prosto_first() {
   try {
-    throw(std::runtime_error("std::runtime_error"));
+    throw(std::runtime_error("throw std catch prosto first"));
   }
   catch(prosto::exception const& e) {
-    // should nether happen
+    // should never happen
     // should be caught by catch(std::exception) below
     using namespace prosto;
     std::cerr << e << std::endl;
@@ -49,7 +51,7 @@ bool throw_std_catch_prosto_first() {
 
 bool throw_prosto_catch_std_first() {
   try {
-    throw(prosto_error(0x1, "prosto::exception"));
+    throw(prosto_error(0x1, "throw prosto catch std first"));
   }
   catch(std::exception const& e) {
     using namespace prosto;
@@ -70,7 +72,7 @@ bool throw_prosto_catch_std_first() {
 
 bool throw_prosto_catch_prosto_first() {
   try {
-    throw(prosto_error(0x1, "prosto::exception"));
+    throw(prosto_error(0x1, "throw prosto catch prosto first"));
   }
   catch(prosto::exception const& e) {
     using namespace prosto;
@@ -78,9 +80,9 @@ bool throw_prosto_catch_prosto_first() {
     return true;
   }
   catch(std::exception const& e) {
-    // should never happen
-    // std::exception should not be thrown
     using namespace prosto;
+    // should never happen
+    // should be caught by catch(prosto::exception) above
     std::cerr << e << std::endl;
     return false;
   }

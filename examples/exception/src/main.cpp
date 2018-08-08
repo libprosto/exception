@@ -14,6 +14,9 @@ int main() {
   throw_custom_prosto_exception();
   throw_custom_prosto_error();
   throw_nested_test();
+  throw_prosto_exception_with_stdstring();
+  throw_prosto_exception_without_code();
+  throw_prosto_exception_into_stringstream();
   
   std::cin.ignore();
   return 0;
