@@ -34,11 +34,16 @@
 
 #include <boost/exception/all.hpp>
 
-#if __cplusplus >= 201703L && __has_include("../environment/debug.hpp")
-#  include "../environment/debug.hpp"
-#elif __has_include(<prosto/environment/debug.hpp>)
-#  include <prosto/environment/debug.hpp>
+#if __cplusplus >= 201703L
+#  if __has_include("../environment/debug.hpp")
+#    include "../environment/debug.hpp"
+#  elif __has_include(<prosto/environment/debug.hpp>)
+#    include <prosto/environment/debug.hpp>
+#  endif
 #endif
+
+
+#undef prosto_error
 
 #ifdef PROSTO_PSEUDO_DEBUG
 #  define prosto_error(...) \
@@ -50,6 +55,9 @@
 #  define prosto_error(...) \
             prosto::exception(__VA_ARGS__)
 #endif
+
+
+#define PROSTO_USING_EXCEPTION
 
 
 namespace prosto {
